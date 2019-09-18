@@ -1,6 +1,6 @@
 import UIKit
 
-class ListViewController: UIViewController, CustomTransitionable {
+class ListViewController: UIViewController {
     
     // MARK: - Outlets
     
@@ -9,9 +9,6 @@ class ListViewController: UIViewController, CustomTransitionable {
     
     // MARK: - Properties
     
-    var transitionView = UIView()
-    
-    private var customInteractor : PopInteractionController?
     private var data = Contact.contactList
     
     // MARK: - Lifecycle
@@ -25,7 +22,6 @@ class ListViewController: UIViewController, CustomTransitionable {
         super.viewDidLoad()
         self.title = "Contacts"
         self.view.backgroundColor = .white
-        self.navigationController?.delegate = self
         setupCollectionView()
     }
     
@@ -45,6 +41,7 @@ class ListViewController: UIViewController, CustomTransitionable {
                 self.view.trailingAnchor.constraint(equalTo: collectionView.trailingAnchor)
             ]
         )
+        
         self.collectionView = collectionView
     }
     
@@ -89,8 +86,6 @@ extension ListViewController: UICollectionViewDataSource {
 extension ListViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let detailViewController = DetailViewController(contact: data[indexPath.row])
-        let currentCell = collectionView.cellForItem(at: indexPath) as! ListCollectionViewCell
-        transitionView = currentCell.avatarImageView
         self.navigationController?.pushViewController(detailViewController, animated: true)
     }
 }
@@ -115,24 +110,5 @@ extension ListViewController: UICollectionViewDelegateFlowLayout {
                         layout collectionViewLayout: UICollectionViewLayout,
                         minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 30
-    }
-}
-
-extension ListViewController: UINavigationControllerDelegate {
-    
-    func navigationController(_ navigationController: UINavigationController, interactionControllerFor animationController: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        guard let ci = customInteractor else { return nil }
-        return ci.transitionInProgress ? customInteractor : nil
-    }
-    
-    func navigationController(_ navigationController: UINavigationController, animationControllerFor operation: UINavigationController.Operation, from fromVC: UIViewController, to toVC: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        
-        switch operation {
-        case .push:
-            self.customInteractor = PopInteractionController(attachTo: toVC)
-            return DetailTransition(duration: 0.5, isPresenting: true)
-        default:
-            return DetailTransition(duration: 0.5, isPresenting: false)
-        }
     }
 }

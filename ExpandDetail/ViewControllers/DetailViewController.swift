@@ -1,6 +1,6 @@
 import UIKit
 
-class DetailViewController: UIViewController, CustomTransitionable {
+class DetailViewController: UIViewController {
     
     // MARK: - Outlets
     
@@ -9,7 +9,6 @@ class DetailViewController: UIViewController, CustomTransitionable {
     // MARK: - Properties
     
     var containerView = UIView()
-    var transitionView = UIView()
     var imageView = UIImageView()
     var label = UILabel()
     var lineView = UIView()
@@ -65,12 +64,6 @@ class DetailViewController: UIViewController, CustomTransitionable {
             ]
         )
         
-        view.layer.shadowColor = UIColor.gray.cgColor
-        view.layer.shadowOffset = CGSize(width: -1, height: 0)
-        view.layer.shadowOpacity = 0.3
-        view.layer.shadowRadius = 1.0
-        view.layer.masksToBounds = false
-        
         self.containerView = containerView
         self.containerView.backgroundColor = .white
     }
@@ -97,7 +90,6 @@ class DetailViewController: UIViewController, CustomTransitionable {
         
         imageView.image = contact.image
         self.imageView = imageView
-        self.transitionView = self.imageView
     }
     
     private func setupLabelLayout() {
@@ -112,7 +104,7 @@ class DetailViewController: UIViewController, CustomTransitionable {
         
         NSLayoutConstraint.activate(
             [
-                label.topAnchor.constraint(equalTo: transitionView.bottomAnchor, constant: 20),
+                label.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 20),
                 label.centerXAnchor.constraint(equalTo: containerView.centerXAnchor),
 
             ]
